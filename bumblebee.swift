@@ -15,7 +15,7 @@ import AppKit
 typealias Attributes = [String: Any]
 //The support support class that keeps a track of the patterns while processing
 class Pattern {
-    var matched:((String,String,Int) -> (text: String,attrs: Attributes?))?
+    var matched: ((String, String, Int) -> (text: String, attrs: Attributes?))?
     var start = 0
     var length = -1
     var attrs: [String : Any]?
@@ -25,7 +25,7 @@ class Pattern {
     var mustFullfill = true
     var index = 0
     var rewindIndex = 0
-    init(_ text: String, _ start: Int, _ recursive: Bool, _ matched: ((String,String,Int) -> (String, Attributes?))?) {
+    init(_ text: String, _ start: Int, _ recursive: Bool, _ matched: ((String, String, Int) -> (String, Attributes?))?) {
         self.mustFullfill = true
         self.recursive = recursive
         self.start = start
@@ -61,8 +61,8 @@ class Pattern {
 class Matcher {
     var src: String
     var recursive: Bool
-    var matched:((String,String,Int) -> (String, Attributes?))?
-    init(src: String,recursive: Bool ,matched:((String,String,Int) -> (String, Attributes?))?) {
+    var matched: ((String, String, Int) -> (String, Attributes?))?
+    init(src: String, recursive: Bool, matched: ((String, String, Int) -> (String, Attributes?))?) {
         self.src = src
         self.matched = matched
         self.recursive = recursive
@@ -96,7 +96,7 @@ open class BumbleBee {
     }
     
     ///add a new pattern for processing. The closure is called when a match is found and allows the replacement text and attributes to be applied.
-    open func add(_ pattern: String, recursive: Bool, matched: ((String,String,Int) -> (String, [String : Any]?))?) {
+    open func add(_ pattern: String, recursive: Bool, matched: ((String, String, Int) -> (String, [String: Any]?))?) {
         patterns.append(Matcher(src: pattern, recursive: recursive, matched: matched))
     }
     
