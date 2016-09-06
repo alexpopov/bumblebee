@@ -12,19 +12,20 @@ import UIKit
 import AppKit
 #endif
 
+typealias Attributes = [String: Any]
 //The support support class that keeps a track of the patterns while processing
 class Pattern {
-    var matched:((String,String,Int) -> (text: String,attrs: [NSObject : AnyObject]?))?
+    var matched:((String,String,Int) -> (text: String,attrs: Attributes?))?
     var start = 0
     var length = -1
-    var attrs: [String : AnyObject]?
+    var attrs: [String : Any]?
     var text: String
     var recursive: Bool
     var current: Character
     var mustFullfill = true
     var index = 0
     var rewindIndex = 0
-    init(_ text: String, _ start: Int, _ recursive: Bool, _ matched: ((String,String,Int) -> (String,[NSObject : AnyObject]?))?) {
+    init(_ text: String, _ start: Int, _ recursive: Bool, _ matched: ((String,String,Int) -> (String, Attributes?))?) {
         self.mustFullfill = true
         self.recursive = recursive
         self.start = start
@@ -60,8 +61,8 @@ class Pattern {
 class Matcher {
     var src: String
     var recursive: Bool
-    var matched:((String,String,Int) -> (String,[NSObject : AnyObject]?))?
-    init(src: String,recursive: Bool ,matched:((String,String,Int) -> (String,[NSObject : AnyObject]?))?) {
+    var matched:((String,String,Int) -> (String, Attributes?))?
+    init(src: String,recursive: Bool ,matched:((String,String,Int) -> (String, Attributes?))?) {
         self.src = src
         self.matched = matched
         self.recursive = recursive
@@ -95,12 +96,12 @@ open class BumbleBee {
     }
     
     ///add a new pattern for processing. The closure is called when a match is found and allows the replacement text and attributes to be applied.
-    open func add(_ pattern: String, recursive: Bool, matched: ((String,String,Int) -> (String,[NSObject : AnyObject]?))?) {
+    open func add(_ pattern: String, recursive: Bool, matched: ((String,String,Int) -> (String, [String : Any]?))?) {
         patterns.append(Matcher(src: pattern, recursive: recursive, matched: matched))
     }
     
     //The srcText is the raw text to search matches for. A NSAttributedString is return stylized according to the matches.
-    open func process(_ srcText: String, attributes: [String: AnyObject]? = nil) -> NSAttributedString {
+    open func process(_ srcText: String, attributes: [String: Any]? = nil) -> NSAttributedString {
         var pending = Array<Pattern>()
         var collect = Array<Pattern>()
         var index = 0
@@ -129,7 +130,7 @@ open class BumbleBee {
                                 index -= (srcLen-replaceLen)
                                 lastChar = char
                                 pattern.length = replaceLen
-                                pattern.attrs = replace.attrs as? [String:AnyObject]
+                                pattern.attrs = replace.attrs
                             }
                         }
                         pending = pending.filter{$0 != pattern}
